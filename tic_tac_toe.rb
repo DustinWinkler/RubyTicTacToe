@@ -4,7 +4,7 @@ class Board
     @state = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     print_board
   end
-  
+
   def print_board
     puts " #{@state[0]} | #{@state[1]} | #{@state[2]}"
     puts "―――|―――|―――"
@@ -52,7 +52,7 @@ class Player
   end
   def declare_winner
   puts "#{self.name} wins!"
-  self.won = true
+  @won = true
   end
 end
 
@@ -63,7 +63,7 @@ player1 = Player.new(gets.chomp, 'X')
 puts "Player two name?"
 player2 = Player.new(gets.chomp, 'O')
 game = Board.new
-until game.winner? do
+until game.winner? || game.state.all?{ |num| !(1..9).include?(num)}
   puts "#{player1.name}, Which space would you like?"
   choice = gets.chomp.to_i
   until (1..9).include?(game.state[choice - 1])
@@ -78,6 +78,11 @@ until game.winner? do
     next
   end
 
+  if game.state.all?{ |num| ['X', 'O'].include?(num)}
+    puts 'It\'s a draw!'
+    break
+  end
+
   puts "#{player2.name}, Which space would you like?"
   choice = gets.chomp.to_i
   until (1..9).include?(game.state[choice - 1])
@@ -87,8 +92,9 @@ until game.winner? do
   game.change_space(choice - 1, 'O')
   game.print_board
 
+  
 end
 
-unless player1.won
+unless player1.won || game.state.all?{ |num| ['X', 'O'].include?(num)}
   player2.declare_winner
 end
